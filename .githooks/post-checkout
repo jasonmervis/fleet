@@ -1,0 +1,7 @@
+#!/bin/sh
+# Provision a new worktree with files git does not carry. Must stay fast; never fail.
+[ "$3" = "1" ] || exit 0
+COMMON=$(git rev-parse --git-common-dir); MAIN=$(cd "$COMMON/.." && pwd)
+[ "$(pwd)" = "$MAIN" ] && exit 0
+for f in .env .env.local; do [ -f "$MAIN/$f" ] && cp "$MAIN/$f" .; done
+exit 0
