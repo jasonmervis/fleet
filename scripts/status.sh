@@ -11,7 +11,7 @@ Usage: status.sh [--workspace <id>] [--dry-run] [--help]
 Prints one line per live agent as "<pane_id>  <status>  <cwd>".
 
 Options:
-  --workspace <id>  Herdr workspace to query (default: $HERDR_WORKSPACE_ID)
+  --workspace <id>  Only report agents in this workspace (default: $HERDR_WORKSPACE_ID)
   --dry-run         Print the command that would run; execute nothing
   --help            Print this help and exit 0
 USAGE
@@ -39,13 +39,10 @@ while [ $# -gt 0 ]; do
   shift
 done
 
-# Dry-run stays offline: no Herdr, no filesystem, no subprocesses.
+# `herdr agent list` takes no options, so --workspace is a client-side filter on
+# each agent's workspace_id — the dry-run line shows the command as actually run.
 if [ "$dry_run" = 1 ]; then
-  if [ -n "$workspace" ]; then
-    emit 1 herdr agent list --workspace "$workspace"
-  else
-    emit 1 herdr agent list
-  fi
+  emit 1 herdr agent list
   exit 0
 fi
 
@@ -54,16 +51,15 @@ need jq
 require_herdr
 [ -n "$workspace" ] || workspace=$HERDR_WORKSPACE_ID
 
-listing=$(herdr agent list --workspace "$workspace") || die "herdr agent list failed"
+listing=$(herdr agent list) || die "herdr agent list failed"
 
-# Tolerate either a wrapped ({"result":{"agents":[...]}}) or bare listing; an
-# empty fleet yields no lines, which is success, not an error.
-printf '%s\n' "$listing" | jq -r '
-  (.result.agents? // .agents? // .result? // . // []) as $a
-  | (if ($a | type) == "array" then $a else [] end)
+# An empty fleet yields no lines, which is success, not an error.
+printf '%s\n' "$listing" | jq -r --arg ws "$workspace" '
+  (.result.agents // [])
+  | map(select(.workspace_id == $ws))
   | .[]
-  | [ (.pane_id // .pane // "-")
-    , (.status  // .state // "-")
-    , (.cwd     // .directory // "-")
+  | [ (.pane_id // "-")
+    , (.agent_status // "-")
+    , (.cwd // "-")
     ] | join("  ")
 '
