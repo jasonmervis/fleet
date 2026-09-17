@@ -302,6 +302,13 @@ git diff "$BASE...$BRANCH"           # works from the orchestrator tab, any bran
 Per PR: confirm the diff stays inside that worker's declared scope; run the test command
 yourself; read the PR body for what the worker could not do.
 
+**Run the thing, not just its tests.** A worker optimises for the acceptance criteria you gave
+it, so a test that only exercises a mocked or `--dry-run` path will pass over a tool that is
+broken in real use. Observed on a real run: all three contract tests passed, but `status.sh`
+died the moment it was invoked for real, because it passed an option the underlying CLI does not
+accept — a path no test covered. Invoke each deliverable the way a user would before you merge,
+and send failures back to the worker that owns the file rather than fixing them yourself.
+
 **Merge order:** smallest diff first, most-depended-on first. After each merge, every remaining
 worker is stale:
 
@@ -348,6 +355,7 @@ orchestrator's, and never a tab you did not create.
 | Worker blocks on every command | `acceptEdits` instead of `auto` | §4 permission mode |
 | `agent wait` returns `blocked` instantly | Bare wait matches current state | `--until idle --until done` (§6) |
 | Worker "done" but nothing changed | It hit an unanswered question and idled | `agent read`; check `git -C "$DIR" log` |
+| Tests pass but the tool is broken | Test only covered a dry-run/mocked path | Run the deliverable for real (§7); send it back to its owner |
 | Worker edits a sibling worktree | SCOPE did not forbid `.worktrees/` | §5.2; revert the stray files |
 | Test runner picks up other workers' tests | Tooling not excluded from `.worktrees/` | Appendix C |
 | Every worker asks for a spec | No CONTEXT given | Put the spec slice in the brief |
