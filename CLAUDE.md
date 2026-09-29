@@ -1,4 +1,4 @@
-# MultiTest
+# fleet
 
 This repo builds the `fleet` CLI (Python package `fleet/`) and its skill
 (`.claude/skills/fleet/`). Contract: `SPEC.md`. Plan and status: `docs/ROADMAP.md`.
@@ -8,7 +8,8 @@ This repo builds the `fleet` CLI (Python package `fleet/`) and its skill
 - Tests fake Herdr with `tests/fixtures/fake_herdr.py` on `PATH`; never call the real one.
 - `.claude/skills/fleet/` is the canonical, generic skill shipped in the wheel. Keep anything
   specific to this repo out of it — put it here.
-- No git remote yet, so the fleet forge is `local`: workers commit to branches, nothing is pushed.
+- Remote: `github.com/jasonmervis/fleet`. Forge is pinned to `local` in `.fleet.toml` because `gh` is logged in
+  as another account; workers commit to branches, nothing is pushed. Unpin once `gh` is `jasonmervis`.
 
 ## Running a fleet on this repo
 

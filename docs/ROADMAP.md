@@ -251,7 +251,7 @@ Deliverables
   `.claude/skills/fleet/` and writes `fleet_version` into `SKILL.md` frontmatter. Idempotent.
 - `fleet --version`; `fleet doctor` compares installed CLI vs the skill copy's `fleet_version` and
   vs `herdr --version`.
-- Install: `uv tool install git+ssh://…/MultiTest@vX.Y.Z`; tagged releases; CHANGELOG.
+- Install: `uv tool install git+https://github.com/jasonmervis/fleet@vX.Y.Z`; tagged releases; CHANGELOG.
 - Playbook §0 replaced by `fleet init`; Appendix A/B/C become "what `init` does".
 
 Exit criteria
