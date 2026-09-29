@@ -1,0 +1,22 @@
+#!/bin/sh
+# Client-side guard: GitHub cannot enforce branch/tag rules on this private Free-plan repo.
+# Refuses direct pushes to main, force pushes, deletions, and tag pushes.
+# Override for a deliberate release/tag push: FLEET_ALLOW_PUSH=1 git push ...
+[ "$FLEET_ALLOW_PUSH" = "1" ] && exit 0
+ZERO=0000000000000000000000000000000000000000
+fail() { echo "pre-push: refused: $1 (set FLEET_ALLOW_PUSH=1 to override)" >&2; exit 1; }
+while read -r local_ref local_sha remote_ref remote_sha; do
+  case "$remote_ref" in
+    refs/heads/main)
+      [ "$local_sha" = "$ZERO" ] && fail "deleting main"
+      fail "direct push to main; open a PR instead" ;;
+    refs/tags/*)
+      fail "tag push to $remote_ref" ;;
+    refs/heads/*)
+      [ "$local_sha" = "$ZERO" ] && continue
+      [ "$remote_sha" = "$ZERO" ] && continue
+      git merge-base --is-ancestor "$remote_sha" "$local_sha" 2>/dev/null \
+        || fail "non-fast-forward push to $remote_ref" ;;
+  esac
+done
+exit 0
