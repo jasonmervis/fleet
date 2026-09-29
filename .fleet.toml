@@ -1,0 +1,7 @@
+# fleet config — committed, read by `fleet`. See `fleet config` for resolved values.
+base = "main"
+install = "uv sync --frozen"
+test = "uv run pytest"
+agent = "claude"
+permission_mode = "auto"  # auto | edits | readonly
+max_workers = 4
