@@ -5,4 +5,5 @@ test = "uv run pytest"
 agent = "claude"
 permission_mode = "auto"  # auto | edits | readonly
 max_workers = 4
-forge = "local"  # pinned: gh is logged in as another account; switch to "auto" once `gh auth switch -u jasonmervis`
+forge = "local"  # pinned: the active gh account is jasonmervis-synth and the repo is public, so "auto" would
+# pick github and act as the wrong user. Switch to "auto" only while `gh auth switch -u jasonmervis` is active.

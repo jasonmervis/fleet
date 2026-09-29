@@ -8,8 +8,12 @@ This repo builds the `fleet` CLI (Python package `fleet/`) and its skill
 - Tests fake Herdr with `tests/fixtures/fake_herdr.py` on `PATH`; never call the real one.
 - `.claude/skills/fleet/` is the canonical, generic skill shipped in the wheel. Keep anything
   specific to this repo out of it — put it here.
-- Remote: `github.com/jasonmervis/fleet`. Forge is pinned to `local` in `.fleet.toml` because `gh` is logged in
-  as another account; workers commit to branches, nothing is pushed. Unpin once `gh` is `jasonmervis`.
+- Remote: `github.com/jasonmervis/fleet` (public). Forge is pinned to `local` in `.fleet.toml` because the
+  active `gh` account is `jasonmervis-synth`, and with a public repo `auto` would pick `github` and act as the
+  wrong user. Workers commit to branches, nothing is pushed. Unpin only while `gh` is switched to `jasonmervis`.
+- `main` is protected by GitHub rulesets: PRs only, linear history, both `ci` jobs required. Tags are immutable.
+  `.githooks/pre-push` mirrors this locally and also blocks tag pushes; `FLEET_ALLOW_PUSH=1 git push` overrides
+  it for a release tag.
 
 ## Running a fleet on this repo
 
