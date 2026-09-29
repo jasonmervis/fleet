@@ -52,7 +52,7 @@ CLI contract, not from a real run. Treat the first issue-driven run as a supervi
 ## 0. Adopting this playbook in a new repo
 
 ```bash
-uv tool install git+ssh://git@github.com/<org>/MultiTest@v<version>
+uv tool install git+https://github.com/jasonmervis/fleet@v<version>
 cd /path/to/target-repo
 fleet init        # idempotent; re-run to upgrade the skill after upgrading the CLI
 fleet doctor      # CLI, skill stamp and herdr versions agree

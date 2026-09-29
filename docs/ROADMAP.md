@@ -45,7 +45,7 @@ Herdr 0.9.0 (`doctor`, `status`, `spawn --dry-run`, `preflight`).
   installed here. Install it, `herdr integration install codex`, and spawn one worker.
 - [ ] **No live spawn has been run** with the new CLI — only dry-runs and the fake. First real
   `fleet up` should be watched.
-- [ ] Install URL in README (`git+ssh://…/<org>/MultiTest`) is a placeholder until the remote exists.
+- [x] Install URL in README points at `github.com/jasonmervis/fleet`; `v0.1.1` tagged (2026-09-29).
 
 
 Turns the `fleet` skill (playbook + three `sh` scripts) into a supported tool that Synthesis
